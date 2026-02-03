@@ -50,3 +50,30 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+'EOF'
+# Compiled files
+*.o
+*.out
+liwit
+textedit
+
+# Build artifacts
+*.deb
+*.tar.gz
+*.dsc
+*.changes
+*.build
+*.buildinfo
+
+# Debian packaging
+debian-package/
+
+# IDE files
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+*~
+EOF
