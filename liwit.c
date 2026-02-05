@@ -7,6 +7,8 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
+#include <linux/limits.h>
 
 // Configuration
 char *clipboard = NULL;
@@ -35,24 +37,25 @@ void handle_input(EditorState *ed);
 void save_file(EditorState *ed); //save file function prototype
 void open_file(EditorState *ed, const char *filename); // open file function prototype
 
-// Implementation
+// Implementation of file operations
 void save_file(EditorState *ed) {
     if (!ed->filename) {
         // Prompt for filename
         echo();
-        char filename;
+        char filename[MAX_LINE_LENGTH] = {0};
         mvprintw(ed->screen_rows - 1, 0, "Save as: ");
         clrtoeol();
-        getnstr(filename, sizeof(filename) - 1);
+        move(ed->screen_rows - 1, 9);               // place cursor after "Save as: "
+        getnstr(filename, sizeof(filename) - 1);    // expects char*, int
         noecho();
-        
+
         if (strlen(filename) > 0) {
             ed->filename = strdup(filename);
         } else {
             return;
         }
     }
-    
+
     FILE *file = fopen(ed->filename, "w");
     if (!file) {
         mvprintw(ed->screen_rows - 1, 0, "Error: Cannot save file!");
@@ -61,14 +64,14 @@ void save_file(EditorState *ed) {
         napms(2000);
         return;
     }
-    
+
     for (int i = 0; i < ed->line_count; i++) {
-        fprintf(file, "%s\n", ed->lines[i]);
+        fprintf(file, "%s\n", ed->lines[i] ? ed->lines[i] : "");
     }
-    
+
     fclose(file);
     ed->modified = 0;
-    
+
     mvprintw(ed->screen_rows - 1, 0, "File saved!");
     clrtoeol();
     refresh();
@@ -84,34 +87,37 @@ void open_file(EditorState *ed, const char *filename) {
         napms(2000);
         return;
     }
-    
-    // Clear existing content
+
+    // Clear existing content (free each line)
     for (int i = 0; i < ed->line_count; i++) {
         free(ed->lines[i]);
+        ed->lines[i] = NULL;
     }
-    
+
     ed->line_count = 0;
     char buffer[MAX_LINE_LENGTH];
-    
+
     while (fgets(buffer, sizeof(buffer), file) && ed->line_count < MAX_LINES) {
         // Remove newline
         size_t len = strlen(buffer);
         if (len > 0 && buffer[len - 1] == '\n') {
             buffer[len - 1] = '\0';
         }
-        
+
         ed->lines[ed->line_count] = (char *)calloc(MAX_LINE_LENGTH, sizeof(char));
         strcpy(ed->lines[ed->line_count], buffer);
         ed->line_count++;
     }
-    
+
     fclose(file);
-    
+
     if (ed->line_count == 0) {
-        ed->lines = (char *)calloc(MAX_LINE_LENGTH, sizeof(char));
+        // Ensure at least one editable empty line exists
+        ed->lines[0] = (char *)calloc(MAX_LINE_LENGTH, sizeof(char));
         ed->line_count = 1;
     }
-    
+
+    free(ed->filename);
     ed->filename = strdup(filename);
     ed->cursor_x = 0;
     ed->cursor_y = 0;
@@ -122,13 +128,16 @@ void open_file(EditorState *ed, const char *filename) {
 int main(int argc, char *argv[]) {
     EditorState editor;
     
-    // Initialize ncurses
     initscr();
     raw();
     noecho();
     keypad(stdscr, TRUE);
     
-    // Initialize editor
+    // Initialize colors
+    if (has_colors()) {
+        start_color();
+    }
+    
     init_editor(&editor);
     
     // Main loop
@@ -233,9 +242,15 @@ void draw_screen(EditorState *ed) {
 }
 
 
+
 void handle_input(EditorState *ed) {
     int ch = getch();
-    
+
+    if (ch == KEY_RESIZE) {
+        getmaxyx(stdscr, ed->screen_rows, ed->screen_cols);
+        return;
+    }
+
     switch (ch) {
         case KEY_BACKSPACE:
         case 127:
@@ -276,6 +291,21 @@ void handle_input(EditorState *ed) {
     
         case 19: // Ctrl+S
             save_file(ed);
+            break;
+
+        case 15:  // Ctrl+O
+            {
+                char filename[256];
+                echo();
+                mvprintw(ed->screen_rows - 1, 0, "Open file: ");
+                clrtoeol();
+                getnstr(filename, sizeof(filename) - 1);
+                noecho();
+                
+                if (strlen(filename) > 0) {
+                    open_file(ed, filename);
+                }
+            }
             break;
 
         case 17: // Ctrl+Q
