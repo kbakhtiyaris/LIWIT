@@ -8,12 +8,12 @@
 #include <string.h>
 #include <stdio.h>
 
-// ============================================================================
+
 // CONFIGURATION - Adjust these as needed
 // ============================================================================
 
 #define VERSION "1.0"
-#define MAX_LINES 1000
+#define MAX_LINES 5000
 #define MAX_LINE_LENGTH 1024
 #define TAB_SIZE 4
 
