@@ -10,16 +10,13 @@
 
 
 // CONFIGURATION - Adjust these as needed
-// ============================================================================
 
 #define VERSION "1.0"
 #define MAX_LINES 5000
 #define MAX_LINE_LENGTH 1024
 #define TAB_SIZE 4
 
-// ============================================================================
 // DATA STRUCTURES
-// ============================================================================
 
 /**
  * Main editor state structure
@@ -39,15 +36,11 @@ typedef struct {
     int insert_mode;          // 1 for insert, 0 for overwrite
 } EditorState;
 
-// ============================================================================
 // GLOBAL VARIABLES
-// ============================================================================
 
 char *clipboard = NULL;       // For copy/paste functionality
 
-// ============================================================================
 // FUNCTION PROTOTYPES - Declare all functions here
-// ============================================================================
 
 // Core functions
 void init_editor(EditorState *ed);
@@ -78,9 +71,8 @@ void move_to_line_start(EditorState *ed);
 void move_to_line_end(EditorState *ed);
 void scroll_if_needed(EditorState *ed);
 
-// ============================================================================
 // MAIN FUNCTION
-// ============================================================================
+
 
 int main(int argc, char *argv[]) {
     EditorState editor;
@@ -123,9 +115,9 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-// ============================================================================
+
 // INITIALIZATION AND CLEANUP
-// ============================================================================
+
 
 /**
  * Initialize the editor state with default values
@@ -174,9 +166,9 @@ void cleanup_editor(EditorState *ed) {
     }
 }
 
-// ============================================================================
+
 // DISPLAY FUNCTIONS
-// ============================================================================
+
 
 /**
  * Main screen drawing function - calls all sub-drawing functions
@@ -319,9 +311,9 @@ void show_message(EditorState *ed, const char *msg, int duration_ms) {
     napms(duration_ms);
 }
 
-// ============================================================================
+
 // FILE OPERATIONS
-// ============================================================================
+
 
 /**
  * Save current file to disk
