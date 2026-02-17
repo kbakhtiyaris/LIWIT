@@ -4,7 +4,7 @@ Section: editors
 Priority: optional
 Architecture: amd64
 Depends: libncursesw6 | libncurses6
-Maintainer: Khud Bakhtiyar Iqbal Sofi <khudbakhtiyariqbal7890@gmail.com>
+Maintainer: Khud Bakhtiyar Iqbal Sofi <your-email@example.com>
 Description: Linux-Windows Text Editor
  A beginner-friendly terminal text editor with familiar Windows shortcuts.
- Features Ctrl+S/O/Q/C/V/X, visual interface, line numbers, and more.
+ Features Ctrl+S/O/Q, visual interface, line numbers, and more.
