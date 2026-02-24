@@ -1,6 +1,19 @@
-/**
+/*
  * LIWIT - Linux-Windows Text Editor
- * Version 1.0 - Multi-line selection + cut/copy/paste
+ * Copyright (C) 2026  Khud Bakhtiyar Iqbal Sofi
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include <ncurses.h>
@@ -151,8 +164,8 @@ void draw_menu_bar(EditorState *ed) {
     mvprintw(0, 15, " Ctrl+S:Save ");
     mvprintw(0, 30, " Ctrl+O:Open ");
     mvprintw(0, 45, " Ctrl+Q:Quit ");
-    mvprintw(0, 60, " F1:Help ");
-    mvprintw(0, 72, " F2:Select ");
+//    mvprintw(0, 72, " F1:Help ");
+    mvprintw(0, 60, " F2:Select ");
 
     for (int i = 82; i < ed->screen_cols; i++) addch(' ');
 
