@@ -735,7 +735,7 @@ void handle_input(EditorState *ed) {
         default:
             if (ch >= 32 && ch <= 126) {
                 if (ed->selecting) {
-                    // typing clears selection
+                    // typing clears selection for now
                     ed->selecting = 0;
                 }
                 insert_char(ed, (char)ch);
